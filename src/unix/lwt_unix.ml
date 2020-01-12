@@ -588,6 +588,7 @@ type open_flag =
   | O_RSYNC
   | O_SHARE_DELETE
   | O_CLOEXEC
+  | O_KEEPEXEC
 
 external open_job : string -> Unix.open_flag list -> int -> (Unix.file_descr * bool) job = "lwt_unix_open_job"
 
@@ -1347,7 +1348,7 @@ let shutdown ch shutdown_command =
 external stub_socketpair : socket_domain -> socket_type -> int -> Unix.file_descr * Unix.file_descr = "lwt_unix_socketpair_stub"
 
 let socketpair dom typ proto =
-  let do_socketpair = if Sys.win32 then stub_socketpair else Unix.socketpair  in
+  let do_socketpair = Unix.socketpair  in
   let (s1, s2) = do_socketpair dom typ proto in
   (mk_ch ~blocking:false s1, mk_ch ~blocking:false s2)
 
