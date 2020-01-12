@@ -276,7 +276,7 @@ let lwt_log mapper fn args attrs loc =
       let new_exp = if ign then [%expr ()] else [%expr Lwt.return_unit] in
       mapper.expr mapper { new_exp with pexp_attributes = attrs }
     else if List.mem level ["Fatal"; "Error"; "Warning"; "Notice"; "Info"; "Debug"] then
-      let args = List.map (fun (l,e) -> l, mapper.expr mapper e) args in
+      let args = List.map (fun (l,e) -> Labelled l, mapper.expr mapper e) args in
       let new_exp =
         let args = ("location", make_loc loc) ::
                    ("section",  [%expr __pa_log_section]) ::
