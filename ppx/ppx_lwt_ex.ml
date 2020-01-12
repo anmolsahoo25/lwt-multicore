@@ -278,9 +278,9 @@ let lwt_log mapper fn args attrs loc =
     else if List.mem level ["Fatal"; "Error"; "Warning"; "Notice"; "Info"; "Debug"] then
       let args = List.map (fun (l,e) -> Labelled l, mapper.expr mapper e) args in
       let new_exp =
-        let args = ("location", make_loc loc) ::
-                   ("section",  [%expr __pa_log_section]) ::
-                   List.remove_assoc "section" args in
+        let args = (Labelled "location", make_loc loc) ::
+                   (Labelled "section",  [%expr __pa_log_section]) ::
+                   List.remove_assoc (Labelled "section") args in
         [%expr
           if [%e Exp.construct (def_loc (Ldot (Lident "Lwt_log", level))) None] >=
                     Lwt_log.Section.level __pa_log_section then
